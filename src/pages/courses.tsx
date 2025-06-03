@@ -1,20 +1,28 @@
-import { useEffect, useState } from "react";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { useEffect, useState } from 'react'
+import { MagnifyingGlass } from '@phosphor-icons/react'
 
-import { Header } from "../components/header";
-import { Footer } from "../components/footer";
-import type { CourseProps } from "../types/courses";
-import { Modal } from "../components/modal-createCurso";
-
+import { InputForm } from '../components/Formulario'
+import { Header } from '../components/header'
+import { Footer } from '../components/footer'
+import type { CourseProps } from '../types/courses'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 async function fetchCourses() {
   try {
-    const response = await fetch('http://localhost:5000/cursos');
-    const data = await response.json();
-    return data;
+    const response = await fetch('http://localhost:5000/cursos')
+    const data = await response.json()
+    return data
   } catch (error) {
-    return [];
-  }}
+    return []
+  }
+}
 
 export const Courses = () => {
   const [refresh, setRefresh] = useState(0)
@@ -22,7 +30,8 @@ export const Courses = () => {
   const [allCourses, setAllCourses] = useState<CourseProps[]>([])
 
   useEffect(() => {
-    fetchCourses().then((data) => {setCourses(data)
+    fetchCourses().then((data) => {
+      setCourses(data)
       setAllCourses(data)
     })
   }, [refresh])
@@ -32,7 +41,7 @@ export const Courses = () => {
     const form = new FormData(event.currentTarget)
     const search = form.get('search') as string
     if (!search) {
-      setCourses(allCourses);
+      setCourses(allCourses)
       return
     }
     const filterdCourses = allCourses.filter((course) =>
@@ -56,18 +65,31 @@ export const Courses = () => {
             />
             <MagnifyingGlass className="text-cyan-700 -ml-8" size={24} />
           </form>
-          <div>
-            <button className=" bg-cyan-700 hover:bg-cyan-600 cursor-pointer text-white px-4 py-2 rounded-md mr-4"
-              onClick={() => Modal()}
-            >
-              Criar Curso
-            </button>
+          <div className="flex gap-4">
             <button
               className=" bg-cyan-700 hover:bg-cyan-600 cursor-pointer text-white px-4 py-2 rounded-md"
               onClick={() => setRefresh(refresh + 1)}
             >
               Actualizar lista
             </button>
+            <Dialog>
+              <DialogTrigger>
+                <Button
+                  className=" bg-cyan-700 hover:bg-cyan-600 cursor-pointer text-white px-4 py-2 rounded-md"
+                  variant="outline"
+                >
+                  Adicionar Curso
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-cyan-700 text-2xl font-bold">
+                  Adicionar Curso </DialogTitle>
+                  </DialogHeader>
+                <p>Hllo</p>
+                <InputForm />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         <h1 className="text-cyan-700 text-3xl font-medium">Nossos cursos</h1>
@@ -91,11 +113,8 @@ export const Courses = () => {
             </div>
           ))}
         </section>
-      
       </main>
       <Footer />
-
-      
     </>
   )
-};
+}
